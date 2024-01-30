@@ -1,7 +1,10 @@
-choco install git
-choco install vscode
-choco install notepadplusplus
 choco install pwsh
-choco install nvm
+choco install git.install
+choco install vscode.install
+choco install vscode-powershell
+choco install nvm.install
 choco install php
+choco install python3
+choco install 7zip.install
+choco install notepadplusplus
 choco install googlechrome
