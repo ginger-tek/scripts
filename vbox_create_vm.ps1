@@ -31,7 +31,7 @@ else {
   VBoxManage createvm --name $name --ostype $osType --register
   $basePath = '{0}\VirtualBox VMs\{1}' -f $env:USERPROFILE, $name
 }
-VBoxManage modifyvm $Name --ioapic on --memory $ram --vram $vram --cpus $cpus --accelerate-2d-video on --graphicscontroller vmsvga
+VBoxManage modifyvm $Name --ioapic on --memory $ram --vram $vram --cpus $cpus --accelerate-2d-video on --graphicscontroller vmsvga --vrde on --vrdemulticon on --vrdeport 10001
 if ($3DVideoAcceleration.IsPresent) {
   VBoxManage modifyvm $Name --accelerate-3d on
 }
