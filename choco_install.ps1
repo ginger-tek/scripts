@@ -1,14 +1,14 @@
 Set-ExecutionPolicy Unrestricted
-choco install pwsh
-choco install git.install
-choco install vscode.install
-choco install vscode-powershell
-choco install nvm.install
-choco install php
-choco install python3
-choco install 7zip.install
-choco install notepadplusplus
-choco install googlechrome
-choco install python3
+choco install pwsh -y
+choco install git.install -y
+choco install vscode.install -y
+choco install vscode-powershell -y
+choco install nvm.install -y
+choco install php -y
+choco install python3 -y
+choco install 7zip.install -y
+choco install notepadplusplus -y
+choco install googlechrome -y
+choco install python3 -y
 nvm install lts
 nvm use lts
