@@ -1,5 +1,5 @@
 Set-ExecutionPolicy Unrestricted
-choco install googlechrome -y
+winget install Google.Chrome
 choco install pwsh -y
 choco install git.install -y
 choco install vscode.install -y
