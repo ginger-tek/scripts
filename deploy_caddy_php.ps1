@@ -45,6 +45,7 @@ if (!(Test-Path $caddyFilePath)) {
 }
 
 http://localhost:8080 {
+  root "$cwd"
   import php_farm
   file_server
 }
