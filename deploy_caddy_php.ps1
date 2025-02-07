@@ -8,7 +8,7 @@ if ((choco list | ? { $_ -match 'php|caddy' }).Count -ne 2) {
 $cwd = $TargetDirectory 
 $caddyFilePath = "$cwd/Caddyfile"
 $phpFarmPath = "$cwd/php_farm.ps1"
-$startCaddyPath = "$cwd/start_caddy.bat"
+$runCaddyPath = "$cwd/run_caddy.bat"
 
 if (!(Test-Path $phpFarmPath)) {
   @"
@@ -51,8 +51,8 @@ http://localhost:8080 {
 "@ | out-file $caddyFilePath
 }
 
-if (!(Test-Path $startCaddyPath)) {
+if (!(Test-Path $runCaddyPath)) {
   @"
-caddy start --config="$cwd/Caddyfile"
-"@ | out-file $startCaddyPath
+caddy run --config="$cwd/Caddyfile"
+"@ | out-file $runCaddyPath
 }
