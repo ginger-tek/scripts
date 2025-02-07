@@ -1,9 +1,11 @@
+param([string]$TargetDirectory = Get-Location)
+
 if ((choco list | ? { $_ -match 'php|caddy' }).Count -ne 2) {
   choco install caddy
   choco install php
 }
 
-$cwd = Get-Location
+$cwd = $TargetDirectory 
 $caddyFilePath = "$cwd/Caddyfile"
 $phpFarmPath = "$cwd/php_farm.ps1"
 $startCaddyPath = "$cwd/start_caddy.bat"
