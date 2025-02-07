@@ -44,13 +44,13 @@ if (!(Test-Path $caddyFilePath)) {
 }
 
 (spa) {
-  try_files {path} /index.php /index.html
+  file_server
+  try_files {path} /index.html
 }
 
 http://localhost:8080 {
   root "$cwd"
   import php_farm
-  file_server
 }
 "@ | out-file $caddyFilePath
 }
