@@ -62,7 +62,7 @@ caddy run --config="$cwd/Caddyfile"
 "@ | out-file $runCaddyPath
 }
 
-if (!(Test-Path "$cwd/index.php") {
+if (!(Test-Path "$cwd/index.php")) {
   @"
 <?= phpinfo() ?>
 "@ | out-file "$cwd/index.php"
