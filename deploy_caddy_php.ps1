@@ -5,7 +5,11 @@ if ((choco list | ? { $_ -match 'php|caddy' }).Count -ne 2) {
   choco install php
 }
 
-$cwd = $TargetDirectory 
+if (!(Test-Path $TargetDirectory)) {
+  New-Item -ItemType Directory $TargetDirectory
+}
+
+$cwd = $TargetDirectory
 $caddyFilePath = "$cwd/Caddyfile"
 $phpFarmPath = "$cwd/php_farm.ps1"
 $runCaddyPath = "$cwd/run_caddy.bat"
