@@ -53,6 +53,7 @@ http://localhost:8080 {
 
 if (!(Test-Path $runCaddyPath)) {
   @"
+caddy fmt "$cwd/Caddyfile" --overwrite
 caddy run --config="$cwd/Caddyfile"
 "@ | out-file $runCaddyPath
 }
