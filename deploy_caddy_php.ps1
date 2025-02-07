@@ -17,7 +17,7 @@ param([int]`$StartPort = 9001,[int]`$PoolSize = 8)
 `$env:PHP_FCGI_MAX_REQUESTS = 0
 'Starting PHP-CGI farm'
 `$pids = @()
-`$StartPort..(`$StartPort + `$PoolSize) | % { `$pids += Start-Process php-cgi.exe -ArgumentList "-b localhost:`$_" -NoNewWindow -PassThru; "Listening on localhost: `$_" }
+`$StartPort..(`$StartPort + `$PoolSize - 1) | % { `$pids += Start-Process php-cgi.exe -ArgumentList "-b localhost:`$_" -NoNewWindow -PassThru; "Listening on localhost: `$_" }
 pause
 'Stopping farm...'
 Stop-Process -Id `$pids.Id -Force
