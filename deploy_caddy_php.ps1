@@ -1,4 +1,4 @@
-param([string]$TargetDirectory = Get-Location)
+param([string]$TargetDirectory = (Get-Location))
 
 if ((choco list | ? { $_ -match 'php|caddy' }).Count -ne 2) {
   choco install caddy
