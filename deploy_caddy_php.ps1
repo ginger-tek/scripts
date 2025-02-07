@@ -4,41 +4,53 @@ if ((choco list | ? { $_ -match 'php|caddy' }).Count -ne 2) {
 }
 
 $cwd = Get-Location
-if (!(Test-Path $cwd\CaddyFile)) {
+$caddyFilePath = "$cwd/Caddyfile"
+$phpFarmPath = "$cwd/php_farm.ps1"
+$startCaddyPath = "$cwd/start_caddy.bat"
+
+if (!(Test-Path $phpFarmPath)) {
   @"
-(php) {
-  php_fastcgi 127.0.0.1:9000 {
-    try_files {path} {path}/index.php
+param([int]`$StartPort = 9001,[int]`$PoolSize = 8)
+`$env:PHP_FCGI_MAX_REQUESTS = 0
+`$env:PHP_FCGI_MAX_REQUESTS = 0
+'Starting PHP-CGI farm'
+`$pids = @()
+`$StartPort..(`$StartPort + `$PoolSize) | % { `$pids += Start-Process php-cgi.exe -ArgumentList "-b localhost:`$_" -NoNewWindow -PassThru; "Listening on localhost: `$_" }
+pause
+'Stopping farm...'
+Stop-Process -Id `$pids.Id -Force
+"@ | out-file $phpFarmPath
+}
+
+if (!(Test-Path $caddyFilePath)) {
+  @"
+(php_farm) {
+  php_fastcgi {
+    to 127.0.0.1:9001
+    to 127.0.0.1:9002
+    to 127.0.0.1:9003
+    to 127.0.0.1:9004
+    to 127.0.0.1:9005
+    to 127.0.0.1:9006
+    to 127.0.0.1:9007
+    to 127.0.0.1:9008
     capture_stderr
   }
 }
 
-(php_spa) {
-  php_fastcgi 127.0.0.1:9000 {
-    try_files {path} /index.php
-    capture_stderr
-  }
+(spa) {
+  try_files {path} /index.php /index.html
 }
 
-localhost {
-  import php
+http://localhost:8080 {
+  import php_farm
   file_server
 }
-"@ | out-file $cwd\CaddyFile
+"@ | out-file $caddyFilePath
 }
 
-if (!(Test-Path $cwd\start_svr.bat)) {
+if (!(Test-Path $startCaddyPath)) {
   @"
-cd $(Get-Location)
-start /B php-cgi -b 9000
-caddy start
-"@ | out-file $cwd\start_svr.bat
-}
-
-if (!(Test-Path $cwd\stop_svr.bat)) {
-  @"
-cd $(Get-Location)
-taskkill /f /im php-cgi.exe
-caddy stop
-"@ | out-file $cwd\stop_svr.bat
+caddy start --config="$cwd/Caddyfile"
+"@ | out-file $startCaddyPath
 }
