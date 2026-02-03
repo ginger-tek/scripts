@@ -34,3 +34,5 @@ if ($isHomeServer.IsPresent) {
   choco install virtualbox -y
   choco install virtualbox-guest-additions-guest.install -y
 }
+
+pause
