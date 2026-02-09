@@ -1,11 +1,5 @@
 <?php
 
-$_SERVER = [
-	'REQUEST_METHOD' => 'GET',
-	'REQUEST_URI' => '/api/234'
-];
-$_REQUEST = [];
-
 class Lap {
   public static function uri() {
   	return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -15,7 +9,7 @@ class Lap {
     ($pattern === $req ?: ((bool)preg_match("#^$pattern#", $req, $params) ?: false)) && exit(join(array_map(fn($cb) => $cb($params ?? []), $callbacks)));
   }
   public static function fallback(callable $cb): void {
-  	(http_response_code(404) && exit($cb()));
+    (http_response_code(404) && exit($cb()));
   }
   public static function __callStatic(string $name, array $args): void {
     (isset($_REQUEST["fn_$name"]) && exit($_REQUEST["fn_$name"](...$args))) ?: (in_array($name,['get','post','put','patch','delete','any']) && self::route($name=='any'?".*{$args[0]}":"$name{$args[0]}$", ...array_slice($args,1)));
