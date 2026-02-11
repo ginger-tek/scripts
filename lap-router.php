@@ -1,5 +1,7 @@
 <?php
 
+/** @global array{uri:string} $_REQUEST */
+
 class Lap
 {
   public static function route(string $method, string $pattern, callable ...$handlers): void
