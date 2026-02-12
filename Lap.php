@@ -107,4 +107,34 @@ class Lap
   {
     (http_response_code(404) && exit($handler()));
   }
+  /**
+   * Get request header by case-insensitive key
+   * @param string $key
+   * @return ?string
+   */
+  public static function header(string $key): ?string
+  {
+    return ($key=strtoupper($key)) && ($_SERVER["HTTP_$key"] ?? $_SERVER[$key] ?? null);
+  }
+  /**
+   * Get request body content
+   * @return mixed
+   */
+  public static function body(): mixed
+  {
+    return file_get_contents('php://input');
+  }
+  /**
+   * Get object array of files by field name
+   * @param string $field
+   * @return array
+   */
+  public static function files(string $field): array
+  {
+    $arr = [];
+    foreach($_FILES[$field] as $k => $v)
+      foreach($v as $i => $f)
+        $arr[$i][$k] = $_FILES[$k][$i];
+    return $arr;
+  }
 }
