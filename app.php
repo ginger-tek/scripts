@@ -1,24 +1,12 @@
 <?php
 
 require './Lap.php';
+require './Mw.php';
+require './Res.php';
 
-class Res
-{
-  public static function view(string $view, ?array $params = []): string
-  {
-    $params['view'] ??= "views/$view.php";
-    return $params['view'];
-    // ob_start();
-    // extract($params);
-    // require 'views/_layout.php';
-    // return ob_get_clean();
-  }
-  public static function json($data)
-  {
-    header('content-type: application/json');
-    return json_encode($data);
-  }
-}
+use GingerTek\Lap;
+use App\Mw;
+use App\Res;
 
 define('SESSIONS', [
   '9s76fg9876s9876df98g7d9fsd7f' => (object) [
@@ -26,22 +14,6 @@ define('SESSIONS', [
     'username' => 'gingertek'
   ]
 ]);
-
-class Mw
-{
-  public static function id()
-  {
-    ($token = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['AUTHORIZATION'] ?? $_COOKIE['access_token'])
-      && ($_REQUEST['user'] ??= SESSIONS[str_replace('Bearer ', '', $token)])
-      ?: exit(http_response_code(401));
-  }
-  public static function auth($params)
-  {
-    $params['id'] != $_REQUEST['user']?->id && exit(http_response_code(403));
-  }
-}
-
-// Routes --------------------------
 
 Lap::get('/', fn() => <<<HTML
 <!DOCTYPE html>
@@ -56,12 +28,20 @@ Lap::get('/', fn() => <<<HTML
   <script src="https://unpkg.com/vue"></script>
   <script>
     Vue.createApp({
+      template:`{{posts}}`,
       setup() {
+        const posts = Vue.ref([])
         Vue.onMounted(() => {
-          fetch('/api/posts',{headers:{Authorization:'9s76fg9876s9876df98g7d9fsd7f'}})
+          fetch('/api/posts',
+            {
+            headers: {
+              Authorization: '9s76fg9876s9876df98g7d9fsd7f'
+            }
+          })
             .then(r=>r.json())
-            .then(console.log)
+            .then(d=>posts.value=d)
         })
+        return {posts}
       }
     }).mount('#app')
   </script>
@@ -71,7 +51,9 @@ HTML);
 
 Lap::group('/api', Mw::id(...), function () {
   Lap::get('/', fn() => Res::json(['version' => '1.0']));
-  Lap::get('/posts', fn() => Res::json([]));
+  Lap::get('/posts', fn() => Res::json([
+    ['id'=>1,'content'=>'my post!']
+  ]));
   Lap::get('/posts/(?<id>\d+)', fn($p) => Res::json(['test' => $p['id']]));
   Lap::get('/users/(?<id>\d+)', Mw::auth(...), fn($p) => $p['id']);
   Lap::post('/posts', fn() => 'asdf');
