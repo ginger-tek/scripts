@@ -4,7 +4,7 @@ window.onload = () => {
 		addCalBtn();
 		ctrlSave();
 		preloadChangeCom();
-		noFocus();
+		unfocusNumberField();
 	}, 1);
 };
 
@@ -91,7 +91,7 @@ function preloadChangeCom() {
 	}
 }
 
-function noFocus() {
-	(document.getElementById('incident.short_description') ||
-		document.getElementById('change_request.short_description'))?.focus();
+function unfocusNumberField() {
+	(document.getElementById('incident.number') ||
+		document.getElementById('change_request.number'))?.blur();
 }
