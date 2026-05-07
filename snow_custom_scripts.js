@@ -92,8 +92,9 @@ function preloadChangeCom() {
 }
 
 function readonlyNumberField() {
-	const field = document.getElementById('incident.number') ||
-		document.getElementById('change_request.number') || false;
-	if (field)
-		field.readOnly = true;
+	const field =
+		document.getElementById('incident.number') ||
+		document.getElementById('change_request.number') ||
+		false;
+	if (field) field.readOnly = true;
 }
