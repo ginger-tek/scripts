@@ -5,6 +5,7 @@ window.onload = () => {
 		ctrlSave();
 		preloadChangeCom();
 		readonlyNumberField();
+		popupChangeTaskRecord();
 	}, 1);
 };
 
@@ -95,6 +96,51 @@ function readonlyNumberField() {
 	const field =
 		document.getElementById('incident.number') ||
 		document.getElementById('change_request.number') ||
+		document.getElementById('change_task.number') ||
 		false;
 	if (field) field.readOnly = true;
+}
+
+function popupChangeTaskRecord() {
+	const bus = new BroadcastChannel('task-popup-events');
+	let popup, iframe;
+	const closePopup = (ev) => {
+		if (popup) popup.close();
+		if (iframe) iframe.src = 'about:blank';
+	};
+	if (self.location.href.match(/change_request.do/)) {
+		bus.onmessage = (ev) => {
+			if (ev.data == 'task-loading') closePopup();
+		};
+		if (!document.getElementById('task-popup')) {
+			popup = document.createElement('dialog');
+			popup.style = 'padding:0;width:80%;height:75%;position:relative;border: 1px solid RGB(var(--now-tabs_divider--color, var(--now-color_divider--secondary, var(--now-color--neutral-5))));background:#000';
+			popup.id = 'task-popup';
+			iframe = document.createElement('iframe');
+			iframe.style =
+				'position:absolute;top:0;left:0;padding:0;width:100%;height:100%;border:none';
+			iframe.id = 'popup-iframe';
+			const btn = document.createElement('button');
+			btn.innerText = 'Close';
+			btn.classList.add('btn','btn-default','default-focus-outline','notification-follow-widget-action-button');
+			btn.style = 'position:sticky;top:6px;left:10px;width:60px;z-index:100';
+			btn.addEventListener('click', closePopup);
+			popup.appendChild(btn);
+			popup.appendChild(iframe);
+			document.body.appendChild(popup);
+		}
+		const taskLinks = [...document.getElementsByClassName('formlink')].filter(
+			(el) => el.innerText.match(/^CTASK/)
+		);
+		if (taskLinks.length > 0)
+			taskLinks.forEach((el) => {
+				el.addEventListener('click', (ev) => {
+					ev.preventDefault();
+					iframe.src = ev.target.href;
+					popup.showModal();
+				});
+			});
+	} else if (self.location.href.match(/change_task.do/)) {
+		self.window.onunload = () => bus.postMessage('task-loading');
+	}
 }
