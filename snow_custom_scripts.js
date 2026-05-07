@@ -4,7 +4,7 @@ window.onload = () => {
 		addCalBtn();
 		ctrlSave();
 		preloadChangeCom();
-		unfocusNumberField();
+		readonlyNumberField();
 	}, 1);
 };
 
@@ -91,7 +91,9 @@ function preloadChangeCom() {
 	}
 }
 
-function unfocusNumberField() {
-	(document.getElementById('incident.number') ||
-		document.getElementById('change_request.number'))?.blur();
+function readonlyNumberField() {
+	const field = document.getElementById('incident.number') ||
+		document.getElementById('change_request.number') || false;
+	if (field)
+		field.readOnly = true;
 }
