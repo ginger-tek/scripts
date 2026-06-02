@@ -114,21 +114,41 @@ function popupChangeTaskRecord() {
 		};
 		if (!document.getElementById('task-popup')) {
 			popup = document.createElement('dialog');
-			popup.style = 'padding:0;width:80%;height:75%;position:relative;border: 1px solid RGB(var(--now-tabs_divider--color, var(--now-color_divider--secondary, var(--now-color--neutral-5))));background:#000';
+			popup.style =
+				'padding:0;width:80%;height:75%;position:relative;border: 1px solid RGB(var(--now-tabs_divider--color, var(--now-color_divider--secondary, var(--now-color--neutral-5))));background:#000';
 			popup.id = 'task-popup';
+			popup.addEventListener('close', () => {
+				listMenu?.click();
+				setTimeout(() => {
+					const [refreshContainer] = [
+						...document.getElementsByClassName('context_item'),
+					].filter((m) => m.innerText == 'Refresh List');
+					refreshContainer?.click();
+					document.body?.focus()
+				});
+			});
 			iframe = document.createElement('iframe');
 			iframe.style =
 				'position:absolute;top:0;left:0;padding:0;width:100%;height:100%;border:none';
 			iframe.id = 'popup-iframe';
 			const btn = document.createElement('button');
 			btn.innerText = 'Close';
-			btn.classList.add('btn','btn-default','default-focus-outline','notification-follow-widget-action-button');
-			btn.style = 'position:sticky;top:6px;left:10px;width:60px;z-index:100';
+			btn.classList.add(
+				'btn',
+				'btn-default',
+				'default-focus-outline',
+				'notification-follow-widget-action-button'
+			);
+			btn.style =
+				'position:sticky;top:6px;left:10px;width:60px;z-index:100;background-color:rgba(var(--now-color_background--primary, var(--now-color--neutral-0)))';
 			btn.addEventListener('click', closePopup);
 			popup.appendChild(btn);
 			popup.appendChild(iframe);
 			document.body.appendChild(popup);
 		}
+		const listMenu = document.getElementById(
+			'change_request.change_task.change_request_control_button'
+		);
 		const taskLinks = [...document.getElementsByClassName('formlink')].filter(
 			(el) => el.innerText.match(/^CTASK/)
 		);
