@@ -124,7 +124,8 @@ function popupChangeTaskRecord() {
 						...document.getElementsByClassName('context_item'),
 					].filter((m) => m.innerText == 'Refresh List');
 					refreshContainer?.click();
-					document.body?.focus()
+					listMenu?.blur();
+					setTimeout(popupChangeTaskRecord, 1000);
 				});
 			});
 			iframe = document.createElement('iframe');
@@ -145,6 +146,9 @@ function popupChangeTaskRecord() {
 			popup.appendChild(btn);
 			popup.appendChild(iframe);
 			document.body.appendChild(popup);
+		} else {
+			popup = document.getElementById('task-popup');
+			iframe = document.getElementById('popup-iframe');
 		}
 		const listMenu = document.getElementById(
 			'change_request.change_task.change_request_control_button'
